@@ -30,11 +30,6 @@ struct Factorial<0>
 {
     static constexpr size_t value{ 1 };
 };
-template <>
-struct Factorial<1>
-{
-    static constexpr size_t value{ 1 };
-};
 
 template <size_t N>
 const array<size_t, N> range() {
@@ -42,10 +37,6 @@ const array<size_t, N> range() {
     size_t i{ 0 };
     std::generate_n(r.begin(), N, [&i]() { return i++; });
     return r;
-}
-template <>
-const array<size_t, 0> range<0>() {
-    return {};
 }
 
 template <size_t N>
@@ -73,17 +64,6 @@ array<array<size_t, N>, Factorial<N>::value> combinations(const array<size_t, N>
 template <>
 array<array<size_t, 0>, 1> combinations<0>(const array<size_t, 0> &) {
     return {};
-}
-template <>
-array<array<size_t, 1>, 1> combinations<1>(const array<size_t, 1> & indices) {
-    return { array<size_t, 1>{ indices.at(0) } };
-}
-template <>
-array<array<size_t, 2>, 2> combinations<2>(const array<size_t, 2> & indices) {
-    return {
-        array<size_t, 2>{ indices.at(0), indices.at(1) },
-        array<size_t, 2>{ indices.at(1), indices.at(0) }
-    };
 }
 
 template <typename T, size_t N>
