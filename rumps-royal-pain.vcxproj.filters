@@ -15,8 +15,12 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="rumps-royal-pain.cpp">
+    <ClCompile Include="src/rumps-royal-pain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Dockerfile" />
+    <Text Include="Jenkinsfile" />
   </ItemGroup>
 </Project>

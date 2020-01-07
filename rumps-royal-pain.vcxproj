@@ -150,7 +150,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="rumps-royal-pain.cpp" />
+    <ClCompile Include="src/rumps-royal-pain.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="Dockerfile" />
+    <Text Include="Jenkinsfile" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
