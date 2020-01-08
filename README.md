@@ -1,5 +1,8 @@
 # rumps-royal-pain
 
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=rumps-royal-pain-demo&metric=alert_status)](https://sonarcloud.io/dashboard?id=rumps-royal-pain-demo)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=rumps-royal-pain-demo&metric=ncloc)](https://sonarcloud.io/dashboard?id=rumps-royal-pain-demo)
+
 See https://youtu.be/TTM_b7EJg5E?t=2071
 
 Rump's Royal Pain investigates numerical computation issues of IEEE 754 floating points and how _unums_ can solve them. (See "THE END OF NUMERICAL ERROR" by John L. Gustafson, Ph.D; https://web.archive.org/web/20180729032331/http://arith22.gforge.inria.fr/slides/06-gustafson.pdf)
