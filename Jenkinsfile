@@ -17,7 +17,7 @@ pipeline {
       HOME = "${env.WORKSPACE}"
       SOURCE = "src/*.cpp"
       OUTPUT_DIR = "out"
-      EXECUTABLE = "${OUT_DIR}/rumps-royal-pain"
+      EXECUTABLE = "${OUTPUT_DIR}/rumps-royal-pain"
       CPP_FLAGS = "-std=c++17 -O3 -fwhole-program -march=x86-64 -Wall -Wextra -pedantic"
       BUILD_WRAPPER_OUTPUT = "out/bw"
   }
