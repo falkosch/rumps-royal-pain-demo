@@ -8,15 +8,15 @@ pipeline {
     pollSCM('H */15 * * *')
   }
   environment {
-      CI = true
-      HOME = "${env.WORKSPACE}"
-      SOURCE_DIR = 'src'
-      OUTPUT_DIR = 'out'
-      EXECUTABLE = "${OUTPUT_DIR}/rumps-royal-pain"
-      CPP_FLAGS = '-std=c++17 -O3 -fwhole-program -march=x86-64 -Wall -Wextra -pedantic'
-      BUILD_WRAPPER_OUTPUT = 'out/bw'
-      PLATFORM = 'x86_64'
-      GPP = '$(which g++)'
+    CI = true
+    HOME = "${env.WORKSPACE}"
+    SOURCE_DIR = 'src'
+    OUTPUT_DIR = 'out'
+    EXECUTABLE = "${OUTPUT_DIR}/rumps-royal-pain"
+    CPP_FLAGS = '-std=c++17 -O3 -fwhole-program -march=x86-64 -Wall -Wextra -pedantic'
+    BUILD_WRAPPER_OUTPUT = 'out/bw'
+    PLATFORM = 'x86_64'
+    GPP = '$(which g++)'
   }
   stages {
     stage('build') {
@@ -45,9 +45,8 @@ pipeline {
     stage('sonar quality gate') {
       agent {
         docker {
-          image 'sonarsource/sonar-scanner-cli:4.2'
+          image 'gcc-with-sonar-scanner-cli:latest'
           label 'docker && linux'
-          args '--entrypoint ""'
         }
       }
       steps {
