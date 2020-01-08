@@ -20,8 +20,8 @@ pipeline {
   stages {
     stage('build') {
       agent {
-        dockerfile {
-          filename './Dockerfile'
+        docker {
+          image 'gcc-with-sonar-build-wrapper:latest'
           label 'docker && linux'
         }
       }
