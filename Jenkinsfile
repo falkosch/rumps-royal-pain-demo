@@ -1,12 +1,17 @@
 pipeline {
-  agent none
+  agent any
+
   options {
+    buildDiscarder(logRotator(numToKeepStr: '10'))
+    preserveStashes(buildCount: 3)
     skipStagesAfterUnstable()
     timeout(time: 1, unit: 'HOURS')
   }
+
   triggers {
     pollSCM('H */15 * * *')
   }
+
   environment {
     CI = true
     HOME = "${env.WORKSPACE}"
@@ -17,6 +22,7 @@ pipeline {
     CPP_FLAGS = '-std=c++17 -O3 -fwhole-program -march=x86-64 -Wall -Wextra -pedantic'
     GPP = '$(which g++)'
   }
+
   stages {
     stage('build') {
       agent {
@@ -25,6 +31,7 @@ pipeline {
           label 'docker && linux'
         }
       }
+
       stages {
         stage('compile') {
           steps {
@@ -33,6 +40,7 @@ pipeline {
             sh "build-wrapper-linux-x86-64 --out-dir ${BW_OUTPUT_DIR} ${GPP} -o ${EXECUTABLE} ${CPP_FLAGS} ${SOURCE_DIR}/*.cpp"
           }
         }
+
         stage('test') {
           steps {
             sh "chmod +x ${EXECUTABLE}"
@@ -41,6 +49,7 @@ pipeline {
         }
       }
     }
+
     stage('sonar quality gate') {
       agent {
         docker {
@@ -48,15 +57,34 @@ pipeline {
           label 'docker && linux'
         }
       }
+
       steps {
-        withSonarQubeEnv('sonarqube') {
-          sh "sonar-scanner -Dsonar.branch.name=${env.BRANCH_NAME} -Dsonar.sources=${SOURCE_DIR} -Dsonar.cfamily.build-wrapper-output=${BW_OUTPUT_DIR}"
-        }
-        sleep 3
-        timeout(time: 1, unit: 'MINUTES') {
-          waitForQualityGate abortPipeline: true
-        }
+        lock(resource: 'sonarcloud-rumps-royal-pain-demo') {
+          withSonarQubeEnv('sonarqube') {
+            sh "sonar-scanner -Dsonar.branch.name=${env.BRANCH_NAME} -Dsonar.sources=${SOURCE_DIR} -Dsonar.cfamily.build-wrapper-output=${BW_OUTPUT_DIR}"
+          }
+
+          sleep 3
+
+          timeout(time: 1, unit: 'MINUTES') {
+            waitForQualityGate abortPipeline: true
+          }
+        } // sonarcloud-rumps-royal-pain-demo
       }
+    } // sonar quality gate
+  }
+
+  post {
+    failure {
+      script {
+        committerEmail = sh(returnStdout: true, script: 'git --no-pager show -s --format=\'%ae\'').trim()
+      }
+
+      mail(
+        to: "${committerEmail}",
+        subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
+        body: "Something is wrong with ${env.BUILD_URL}"
+      )
     }
   }
 }
