@@ -1,6 +1,7 @@
 # rumps-royal-pain
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=rumps-royal-pain-demo&metric=alert_status)](https://sonarcloud.io/dashboard?id=rumps-royal-pain-demo)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=rumps-royal-pain-demo&metric=coverage)](https://sonarcloud.io/dashboard?id=rumps-royal-pain-demo)
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=rumps-royal-pain-demo&metric=ncloc)](https://sonarcloud.io/dashboard?id=rumps-royal-pain-demo)
 
 See https://youtu.be/TTM_b7EJg5E?t=2071
