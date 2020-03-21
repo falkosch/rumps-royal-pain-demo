@@ -27,7 +27,7 @@ pipeline {
     stage('build') {
       agent {
         docker {
-          image 'gcc-with-sonar-build-wrapper:latest'
+          image 'schwabe/gcc-toolchain:latest'
           label 'docker && linux'
         }
       }
@@ -55,39 +55,24 @@ pipeline {
             sh "${EXECUTABLE}"
           }
         }
-      }
-    }
+        
+        stage('sonar quality gate') {
+          steps {
+            lock(resource: 'sonarcloud-rumps-royal-pain-demo') {
+              withSonarQubeEnv('sonarqube') {
+                sh "sonar-scanner -Dsonar.branch.name=${env.BRANCH_NAME} -Dsonar.sources=${SOURCE_DIR} -Dsonar.cfamily.build-wrapper-output=${BW_OUTPUT_DIR}"
+              }
 
-    stage('sonar quality gate') {
-      agent {
-        docker {
-          image 'gcc-with-sonar-scanner-cli:latest'
-          label 'docker && linux'
-        }
-      }
+              sleep 20
 
-      environment {
-        // Will be evaluated once the stage runs on the requested
-        // "docker && linux" agent, otherwise HOME may have the already
-        // evaluated value from the "pipeline" level, which could be a Windows
-        // path if the master runs on that OS.
-        HOME = "${env.WORKSPACE}"
-      }
-
-      steps {
-        lock(resource: 'sonarcloud-rumps-royal-pain-demo') {
-          withSonarQubeEnv('sonarqube') {
-            sh "sonar-scanner -Dsonar.branch.name=${env.BRANCH_NAME} -Dsonar.sources=${SOURCE_DIR} -Dsonar.cfamily.build-wrapper-output=${BW_OUTPUT_DIR}"
+              timeout(time: 1, unit: 'MINUTES') {
+                waitForQualityGate abortPipeline: true
+              }
+            } // sonarcloud-rumps-royal-pain-demo
           }
-
-          sleep 3
-
-          timeout(time: 1, unit: 'MINUTES') {
-            waitForQualityGate abortPipeline: true
-          }
-        } // sonarcloud-rumps-royal-pain-demo
+        } // sonar quality gate
       }
-    } // sonar quality gate
+    } // build
   }
 
   post {
